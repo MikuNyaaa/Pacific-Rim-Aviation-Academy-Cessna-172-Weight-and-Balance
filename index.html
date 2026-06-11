@@ -26,6 +26,7 @@
         radial-gradient(circle at 10% 20%, #ffffff 0%, #f3f0eb 45%, #e7e2d9 100%);
       min-height: 100vh;
       padding: 24px;
+      overflow-x: hidden;
     }
 
     .page {
@@ -85,8 +86,12 @@
       min-width: 700px;
     }
 
+    .wb-scroll {
+      overflow-x: auto;
+    }
+
     .persons-table {
-      min-width: 520px;
+      min-width: 0;
     }
 
     th, td {
@@ -119,7 +124,7 @@
 
     .split {
       display: grid;
-      grid-template-columns: 2.2fr 1fr;
+      grid-template-columns: 2fr 1.2fr;
       gap: 12px;
     }
 
@@ -196,6 +201,8 @@
     .preflight-table {
       margin: 0;
       border: 0;
+      table-layout: fixed;
+      width: 100%;
     }
 
     .preflight-table th,
@@ -221,7 +228,7 @@
 
     .preflight-table td:last-child,
     .preflight-table th:last-child {
-      width: 32%;
+      width: 36%;
       text-align: center;
       font-weight: 600;
     }
@@ -310,14 +317,36 @@
         grid-template-columns: 1fr;
       }
 
-      .split > div:last-child {
-        order: -1;
-      }
-
       th,
       td {
         font-size: 12px;
         padding: 6px;
+      }
+
+      .output-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .preflight-table th,
+      .preflight-table td {
+        font-size: 11px;
+        padding: 6px;
+      }
+
+      .preflight-table td:first-child,
+      .preflight-table th:first-child {
+        width: 66%;
+      }
+
+      .preflight-table td:last-child,
+      .preflight-table th:last-child {
+        width: 34%;
+      }
+
+      .preflight-table thead th {
+        white-space: normal;
+        line-height: 1.2;
+        font-size: 10px;
       }
 
       input {
@@ -327,6 +356,101 @@
 
       td:first-child {
         width: auto;
+      }
+
+      .wb-scroll {
+        overflow: visible;
+      }
+
+      .wb-table {
+        min-width: 0;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .wb-table {
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-bottom: 10px;
+        background: transparent;
+      }
+
+      .wb-table thead {
+        display: none;
+      }
+
+      .wb-table tbody,
+      .wb-table tr,
+      .wb-table td {
+        display: block;
+        width: 100%;
+      }
+
+      .wb-table tbody tr {
+        border: 1px solid #8f9aa4;
+        background: #fff;
+        padding: 8px;
+        margin-bottom: 8px;
+      }
+
+      .wb-table tbody td {
+        border: 0;
+        padding: 0;
+        margin: 0;
+      }
+
+      .wb-table tbody td:first-child {
+        font-size: 13px;
+        font-weight: 700;
+        color: #22303a;
+        border-bottom: 1px solid #d0d8df;
+        padding-bottom: 6px;
+        margin-bottom: 6px;
+      }
+
+      .wb-table tbody td:nth-child(2),
+      .wb-table tbody td:nth-child(3),
+      .wb-table tbody td:nth-child(4) {
+        border: 1px solid #d0d8df;
+        background: #f9fbfd;
+        padding: 6px;
+        margin-bottom: 6px;
+      }
+
+      .wb-table tbody td:nth-child(2)::before,
+      .wb-table tbody td:nth-child(3)::before,
+      .wb-table tbody td:nth-child(4)::before {
+        display: block;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        text-transform: uppercase;
+        color: #3a4a57;
+        margin-bottom: 4px;
+      }
+
+      .wb-table tbody td:nth-child(2)::before {
+        content: "Weight (lb)";
+      }
+
+      .wb-table tbody td:nth-child(3)::before {
+        content: "Arm (in)";
+      }
+
+      .wb-table tbody td:nth-child(4)::before {
+        content: "Moment";
+      }
+
+      .wb-table .num {
+        text-align: left;
+      }
+
+      .wb-table .readonly {
+        background: #f4f8fb;
+      }
+
+      .wb-table input {
+        min-height: 36px;
       }
     }
   </style>
@@ -349,7 +473,7 @@
 
     <section class="split">
       <div>
-        <div class="table-scroll">
+        <div class="table-scroll wb-scroll">
         <table class="wb-table">
           <thead>
             <tr>
@@ -363,7 +487,7 @@
             <tr>
               <td>Empty Weight</td>
               <td><input type="number" step="0.1" id="emptyWeight" /></td>
-              <td class="num readonly">(from aircraft data)</td>
+              <td><input type="number" step="0.1" id="emptyArm" /></td>
               <td><input type="number" step="0.1" id="emptyMoment" /></td>
             </tr>
             <tr>
@@ -437,25 +561,6 @@
           <p class="tiny">Entering gallons auto-fills the matching fuel weight cells using 6.0 lb/gal avgas.</p>
         </div>
 
-        <div class="card">
-          <h2>Persons On Board</h2>
-          <div class="table-scroll">
-          <table class="persons-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Emergency Contact #</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td><input type="text" placeholder="Pilot in Command" /></td><td><input type="text" /></td></tr>
-              <tr><td><input type="text" placeholder="Student / Front Passenger" /></td><td><input type="text" /></td></tr>
-              <tr><td><input type="text" placeholder="Passenger" /></td><td><input type="text" /></td></tr>
-              <tr><td><input type="text" placeholder="Passenger" /></td><td><input type="text" /></td></tr>
-            </tbody>
-          </table>
-          </div>
-        </div>
       </div>
 
       <div>
@@ -473,47 +578,69 @@
           </div>
           <div class="status" id="statusPanel"></div>
         </div>
+      </div>
+    </section>
 
-        <div class="preflight-card">
-          <table class="preflight-table">
-            <thead>
-              <tr><th>Pre-FLIGHT</th><th>Instructor Initials</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Weight &amp; Balance</td><td><input class="line-field" type="text" /></td></tr>
-              <tr><td>WX &amp; NOTAMS</td><td><input class="line-field" type="text" /></td></tr>
-              <tr><td>License/Permit #</td><td><input class="line-field" type="text" /></td></tr>
-              <tr>
-                <td>
-                  <div class="date-cell">
-                    <span>Medical Validity Date</span>
-                    <div class="date-ymd">
-                    <input type="text" maxlength="2" aria-label="Medical validity year" /><span>Y</span>
-                    <input type="text" maxlength="2" aria-label="Medical validity month" /><span>M</span>
-                    <input type="text" maxlength="2" aria-label="Medical validity day" /><span>D</span>
-                    </div>
-                  </div>
-                </td>
-                <td class="blank-initials"></td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="date-cell">
-                    <span>Booklet Expiry Date</span>
-                    <div class="date-ymd">
-                    <input type="text" maxlength="2" aria-label="Booklet expiry year" /><span>Y</span>
-                    <input type="text" maxlength="2" aria-label="Booklet expiry month" /><span>M</span>
-                    <input type="text" maxlength="2" aria-label="Booklet expiry day" /><span>D</span>
-                    </div>
-                  </div>
-                </td>
-                <td class="blank-initials"></td>
-              </tr>
-              <tr><td>A/C Documents</td><td><input class="line-field" type="text" /></td></tr>
-              <tr><td>Daily Flight Record</td><td><input class="line-field" type="text" /></td></tr>
-            </tbody>
-          </table>
+    <section>
+      <div class="card">
+        <h2>Persons On Board</h2>
+        <div class="table-scroll">
+        <table class="persons-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Emergency Contact #</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><input type="text" placeholder="Pilot in Command" /></td><td><input type="text" /></td></tr>
+            <tr><td><input type="text" placeholder="Student / Front Passenger" /></td><td><input type="text" /></td></tr>
+            <tr><td><input type="text" placeholder="Passenger" /></td><td><input type="text" /></td></tr>
+            <tr><td><input type="text" placeholder="Passenger" /></td><td><input type="text" /></td></tr>
+          </tbody>
+        </table>
         </div>
+      </div>
+
+      <div class="preflight-card">
+        <table class="preflight-table">
+          <thead>
+            <tr><th>Pre-FLIGHT</th><th>Instructor<br />Initials</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Weight &amp; Balance</td><td><input class="line-field" type="text" /></td></tr>
+            <tr><td>WX &amp; NOTAMS</td><td><input class="line-field" type="text" /></td></tr>
+            <tr><td>License/Permit #</td><td><input class="line-field" type="text" /></td></tr>
+            <tr>
+              <td>
+                <div class="date-cell">
+                  <span>Medical Validity Date</span>
+                  <div class="date-ymd">
+                  <input type="text" maxlength="2" aria-label="Medical validity year" /><span>Y</span>
+                  <input type="text" maxlength="2" aria-label="Medical validity month" /><span>M</span>
+                  <input type="text" maxlength="2" aria-label="Medical validity day" /><span>D</span>
+                  </div>
+                </div>
+              </td>
+              <td class="blank-initials"></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="date-cell">
+                  <span>Booklet Expiry Date</span>
+                  <div class="date-ymd">
+                  <input type="text" maxlength="2" aria-label="Booklet expiry year" /><span>Y</span>
+                  <input type="text" maxlength="2" aria-label="Booklet expiry month" /><span>M</span>
+                  <input type="text" maxlength="2" aria-label="Booklet expiry day" /><span>D</span>
+                  </div>
+                </div>
+              </td>
+              <td class="blank-initials"></td>
+            </tr>
+            <tr><td>A/C Documents</td><td><input class="line-field" type="text" /></td></tr>
+            <tr><td>Daily Flight Record</td><td><input class="line-field" type="text" /></td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -582,7 +709,9 @@
 
     const calculate = () => {
       const emptyWeight = toNum("emptyWeight");
-      const emptyMoment = toNum("emptyMoment");
+      const emptyArm = toNum("emptyArm");
+      const emptyMomentInput = toNum("emptyMoment");
+      const emptyMoment = emptyMomentInput > 0 ? emptyMomentInput : computeMoment(emptyWeight, emptyArm);
       const frontWeight = toNum("frontWeight");
       const aftWeight = toNum("aftWeight");
       const bag1Weight = toNum("bag1Weight");
@@ -660,7 +789,7 @@
       if (fuelBurnWeight > fuelTakeoffWeight) {
         issues.push("Fuel required to landing cannot be greater than fuel at takeoff.");
       }
-      if (cgTow < 35 || cgTow > 47.5) {
+      if (towWeight > 0 && (cgTow < 35 || cgTow > 47.5)) {
         issues.push("Takeoff CG appears outside typical C172 envelope. Verify with POH envelope for this aircraft.");
       }
 
