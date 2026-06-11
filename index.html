@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacific Rim C172 Weight and Balance</title>
+  <style>
+    :root {
+      --paper: #f8f6f2;
+      --ink: #1f2329;
+      --line: #7c8b97;
+      --accent: #0f4c5c;
+      --warn: #b42318;
+      --ok: #027a48;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 20%, #ffffff 0%, #f3f0eb 45%, #e7e2d9 100%);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      background: var(--paper);
+      border: 1px solid #c5bfb5;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 18px;
+      letter-spacing: 0.4px;
+      margin: 0 0 12px;
+      text-transform: uppercase;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1.6fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    input {
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 7px 8px;
+      font-size: 14px;
+      width: 100%;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 12px;
+      background: #fff;
+    }
+
+    th, td {
+      border: 1px solid #8f9aa4;
+      padding: 7px;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #eaf0f4;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.25px;
+    }
+
+    td:first-child {
+      width: 34%;
+      font-weight: 600;
+    }
+
+    .num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .readonly {
+      background: #f6f8fa;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr;
+      gap: 12px;
+    }
+
+    .card {
+      border: 1px solid #8f9aa4;
+      background: #fff;
+      padding: 10px;
+      margin-bottom: 12px;
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      color: var(--accent);
+    }
+
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .output-grid div {
+      border: 1px solid #d2d8dd;
+      padding: 8px;
+      background: #fcfdff;
+      font-size: 12px;
+    }
+
+    .output-grid strong {
+      display: block;
+      font-size: 16px;
+      margin-top: 3px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .status {
+      margin-top: 10px;
+      padding: 8px;
+      border: 1px solid #d2d8dd;
+      background: #fcfdff;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .status .ok {
+      color: var(--ok);
+      font-weight: 600;
+    }
+
+    .status .warn {
+      color: var(--warn);
+      font-weight: 600;
+    }
+
+    .tiny {
+      font-size: 11px;
+      color: #4a5560;
+      margin-top: 4px;
+    }
+
+    .checklist td {
+      height: 38px;
+    }
+
+    .footer {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .split,
+      .footer,
+      .meta,
+      .output-grid {
+        grid-template-columns: 1fr;
+      }
+
+      td:first-child {
+        width: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <h1>Pacific Rim Aviation Academy Cessna 172 Weight and Balance</h1>
+
+    <section class="meta">
+      <label>Name
+        <input type="text" id="studentName" placeholder="Student name" />
+      </label>
+      <label>Date
+        <input type="date" id="flightDate" />
+      </label>
+      <label>Aircraft Ident
+        <input type="text" id="aircraftIdent" placeholder="Tail number" />
+      </label>
+    </section>
+
+    <section class="split">
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th>Cessna 172</th>
+              <th>Weight (lb)</th>
+              <th>Arm (in)</th>
+              <th>Moment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Empty Weight</td>
+              <td><input type="number" step="0.1" id="emptyWeight" /></td>
+              <td class="num readonly">(from aircraft data)</td>
+              <td><input type="number" step="0.1" id="emptyMoment" /></td>
+            </tr>
+            <tr>
+              <td>Pilot / Front Passenger</td>
+              <td><input type="number" step="0.1" id="frontWeight" /></td>
+              <td class="num" id="armFront">37.0</td>
+              <td class="num readonly" id="momentFront">0.0</td>
+            </tr>
+            <tr>
+              <td>Aft Passengers</td>
+              <td><input type="number" step="0.1" id="aftWeight" /></td>
+              <td class="num" id="armAft">73.0</td>
+              <td class="num readonly" id="momentAft">0.0</td>
+            </tr>
+            <tr>
+              <td>Baggage Area 1 (Max 120 lb)</td>
+              <td><input type="number" step="0.1" id="bag1Weight" /></td>
+              <td class="num" id="armBag1">95.0</td>
+              <td class="num readonly" id="momentBag1">0.0</td>
+            </tr>
+            <tr>
+              <td>Baggage Area 2 (Max 50 lb)</td>
+              <td><input type="number" step="0.1" id="bag2Weight" /></td>
+              <td class="num" id="armBag2">123.0</td>
+              <td class="num readonly" id="momentBag2">0.0</td>
+            </tr>
+            <tr>
+              <td>Zero Fuel Weight</td>
+              <td class="num readonly" id="zfwWeight">0.0</td>
+              <td class="num readonly">-</td>
+              <td class="num readonly" id="zfwMoment">0.0</td>
+            </tr>
+            <tr>
+              <td>Fuel at Takeoff</td>
+              <td><input type="number" step="0.1" id="fuelTakeoffWeight" /></td>
+              <td class="num" id="armFuel">48.6</td>
+              <td class="num readonly" id="momentFuelTakeoff">0.0</td>
+            </tr>
+            <tr>
+              <td>Takeoff Weight</td>
+              <td class="num readonly" id="towWeight">0.0</td>
+              <td class="num readonly">-</td>
+              <td class="num readonly" id="towMoment">0.0</td>
+            </tr>
+            <tr>
+              <td>Fuel Required (burn to landing)</td>
+              <td><input type="number" step="0.1" id="fuelBurnWeight" /></td>
+              <td class="num">48.6</td>
+              <td class="num readonly" id="momentFuelBurn">0.0</td>
+            </tr>
+            <tr>
+              <td>Landing Weight</td>
+              <td class="num readonly" id="ldgWeight">0.0</td>
+              <td class="num readonly">-</td>
+              <td class="num readonly" id="ldgMoment">0.0</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="card">
+          <h2>Fuel Helper</h2>
+          <div class="meta" style="grid-template-columns: 1fr 1fr; margin-bottom: 0;">
+            <label>Fuel at Takeoff (gal)
+              <input type="number" step="0.1" id="fuelTakeoffGallons" placeholder="auto x6 lb/gal" />
+            </label>
+            <label>Fuel Burn to Landing (gal)
+              <input type="number" step="0.1" id="fuelBurnGallons" placeholder="auto x6 lb/gal" />
+            </label>
+          </div>
+          <p class="tiny">Entering gallons auto-fills the matching fuel weight cells using 6.0 lb/gal avgas.</p>
+        </div>
+
+        <div class="card">
+          <h2>Persons On Board</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Emergency Contact #</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><input type="text" placeholder="Pilot in Command" /></td><td><input type="text" /></td></tr>
+              <tr><td><input type="text" placeholder="Student / Front Passenger" /></td><td><input type="text" /></td></tr>
+              <tr><td><input type="text" placeholder="Passenger" /></td><td><input type="text" /></td></tr>
+              <tr><td><input type="text" placeholder="Passenger" /></td><td><input type="text" /></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h2>Live Output</h2>
+          <div class="output-grid">
+            <div>Zero Fuel CG (in)<strong id="cgZfw">0.00</strong></div>
+            <div>Takeoff CG (in)<strong id="cgTow">0.00</strong></div>
+            <div>Landing CG (in)<strong id="cgLdg">0.00</strong></div>
+          </div>
+          <div class="output-grid" style="margin-top: 8px;">
+            <div>Zero Fuel Weight<strong id="outZfwW">0.0</strong></div>
+            <div>Takeoff Weight<strong id="outTowW">0.0</strong></div>
+            <div>Landing Weight<strong id="outLdgW">0.0</strong></div>
+          </div>
+          <div class="status" id="statusPanel"></div>
+        </div>
+
+        <div class="card">
+          <h2>Pre-Flight</h2>
+          <table class="checklist">
+            <thead>
+              <tr><th>Item</th><th>Instructor Initials</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Weight and Balance</td><td><input type="text" /></td></tr>
+              <tr><td>WX and NOTAMS</td><td><input type="text" /></td></tr>
+              <tr><td>License/Permit #</td><td><input type="text" /></td></tr>
+              <tr><td>Medical Validity Date</td><td><input type="date" /></td></tr>
+              <tr><td>Booklet Expiry Date</td><td><input type="date" /></td></tr>
+              <tr><td>A/C Documents</td><td><input type="text" /></td></tr>
+              <tr><td>Daily Flight Record</td><td><input type="text" /></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="footer">
+      <label>Current Air Time
+        <input type="text" />
+      </label>
+      <label>Next Inspection Due
+        <input type="text" />
+      </label>
+      <label>Time to Next Inspection
+        <input type="text" />
+      </label>
+      <label>Next Out of Phase Item
+        <input type="text" />
+      </label>
+      <label>Due Date for Item
+        <input type="text" />
+      </label>
+    </section>
+  </main>
+
+  <script>
+    const ARMS = {
+      front: 37.0,
+      aft: 73.0,
+      bag1: 95.0,
+      bag2: 123.0,
+      fuel: 48.6,
+    };
+
+    const LIMITS = {
+      bag1Max: 120,
+      bag2Max: 50,
+      bagCombinedMax: 120,
+      maxGross: 2300,
+    };
+
+    const toNum = (id) => {
+      const value = parseFloat(document.getElementById(id).value);
+      return Number.isFinite(value) ? value : 0;
+    };
+
+    const setText = (id, value, decimals = 1) => {
+      document.getElementById(id).textContent = Number.isFinite(value) ? value.toFixed(decimals) : "0.0";
+    };
+
+    const computeMoment = (w, arm) => w * arm;
+
+    const bindFuelHelper = () => {
+      const galTakeoff = document.getElementById("fuelTakeoffGallons");
+      const galBurn = document.getElementById("fuelBurnGallons");
+
+      galTakeoff.addEventListener("input", () => {
+        const pounds = toNum("fuelTakeoffGallons") * 6.0;
+        document.getElementById("fuelTakeoffWeight").value = pounds ? pounds.toFixed(1) : "";
+        calculate();
+      });
+
+      galBurn.addEventListener("input", () => {
+        const pounds = toNum("fuelBurnGallons") * 6.0;
+        document.getElementById("fuelBurnWeight").value = pounds ? pounds.toFixed(1) : "";
+        calculate();
+      });
+    };
+
+    const calculate = () => {
+      const emptyWeight = toNum("emptyWeight");
+      const emptyMoment = toNum("emptyMoment");
+      const frontWeight = toNum("frontWeight");
+      const aftWeight = toNum("aftWeight");
+      const bag1Weight = toNum("bag1Weight");
+      const bag2Weight = toNum("bag2Weight");
+      const fuelTakeoffWeight = toNum("fuelTakeoffWeight");
+      const fuelBurnWeight = toNum("fuelBurnWeight");
+
+      const momentFront = computeMoment(frontWeight, ARMS.front);
+      const momentAft = computeMoment(aftWeight, ARMS.aft);
+      const momentBag1 = computeMoment(bag1Weight, ARMS.bag1);
+      const momentBag2 = computeMoment(bag2Weight, ARMS.bag2);
+      const momentFuelTakeoff = computeMoment(fuelTakeoffWeight, ARMS.fuel);
+      const momentFuelBurn = computeMoment(fuelBurnWeight, ARMS.fuel);
+
+      setText("momentFront", momentFront);
+      setText("momentAft", momentAft);
+      setText("momentBag1", momentBag1);
+      setText("momentBag2", momentBag2);
+      setText("momentFuelTakeoff", momentFuelTakeoff);
+      setText("momentFuelBurn", momentFuelBurn);
+
+      const zfwWeight = emptyWeight + frontWeight + aftWeight + bag1Weight + bag2Weight;
+      const zfwMoment = emptyMoment + momentFront + momentAft + momentBag1 + momentBag2;
+
+      const towWeight = zfwWeight + fuelTakeoffWeight;
+      const towMoment = zfwMoment + momentFuelTakeoff;
+
+      const ldgWeight = towWeight - fuelBurnWeight;
+      const ldgMoment = towMoment - momentFuelBurn;
+
+      const cgZfw = zfwWeight > 0 ? zfwMoment / zfwWeight : 0;
+      const cgTow = towWeight > 0 ? towMoment / towWeight : 0;
+      const cgLdg = ldgWeight > 0 ? ldgMoment / ldgWeight : 0;
+
+      setText("zfwWeight", zfwWeight);
+      setText("zfwMoment", zfwMoment);
+      setText("towWeight", towWeight);
+      setText("towMoment", towMoment);
+      setText("ldgWeight", ldgWeight);
+      setText("ldgMoment", ldgMoment);
+
+      setText("cgZfw", cgZfw, 2);
+      setText("cgTow", cgTow, 2);
+      setText("cgLdg", cgLdg, 2);
+
+      setText("outZfwW", zfwWeight);
+      setText("outTowW", towWeight);
+      setText("outLdgW", ldgWeight);
+
+      renderStatus({
+        bag1Weight,
+        bag2Weight,
+        towWeight,
+        fuelTakeoffWeight,
+        fuelBurnWeight,
+        cgTow,
+      });
+    };
+
+    const renderStatus = ({ bag1Weight, bag2Weight, towWeight, fuelTakeoffWeight, fuelBurnWeight, cgTow }) => {
+      const issues = [];
+
+      if (bag1Weight > LIMITS.bag1Max) {
+        issues.push(`Baggage Area 1 exceeds ${LIMITS.bag1Max} lb.`);
+      }
+      if (bag2Weight > LIMITS.bag2Max) {
+        issues.push(`Baggage Area 2 exceeds ${LIMITS.bag2Max} lb.`);
+      }
+      if (bag1Weight + bag2Weight > LIMITS.bagCombinedMax) {
+        issues.push(`Combined baggage exceeds ${LIMITS.bagCombinedMax} lb.`);
+      }
+      if (towWeight > LIMITS.maxGross) {
+        issues.push(`Takeoff weight exceeds ${LIMITS.maxGross} lb max gross.`);
+      }
+      if (fuelBurnWeight > fuelTakeoffWeight) {
+        issues.push("Fuel required to landing cannot be greater than fuel at takeoff.");
+      }
+      if (cgTow < 35 || cgTow > 47.5) {
+        issues.push("Takeoff CG appears outside typical C172 envelope. Verify with POH envelope for this aircraft.");
+      }
+
+      const panel = document.getElementById("statusPanel");
+      if (issues.length === 0) {
+        panel.innerHTML = '<span class="ok">No limit warnings detected.</span><br />Always confirm against your specific aircraft POH and school SOP.';
+      } else {
+        panel.innerHTML = `<span class="warn">Check limits before flight:</span><br />${issues.join("<br />")}`;
+      }
+    };
+
+    const inputs = document.querySelectorAll('input[type="number"]');
+    inputs.forEach((input) => input.addEventListener("input", calculate));
+
+    bindFuelHelper();
+    calculate();
+  </script>
+</body>
+</html>
