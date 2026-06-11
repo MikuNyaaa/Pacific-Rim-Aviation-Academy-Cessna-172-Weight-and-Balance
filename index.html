@@ -75,6 +75,20 @@
       background: #fff;
     }
 
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .wb-table {
+      min-width: 700px;
+    }
+
+    .persons-table {
+      min-width: 520px;
+    }
+
     th, td {
       border: 1px solid #8f9aa4;
       padding: 7px;
@@ -173,6 +187,102 @@
       height: 38px;
     }
 
+    .preflight-card {
+      border: 1px solid #8f9aa4;
+      background: #fff;
+      margin-bottom: 12px;
+    }
+
+    .preflight-table {
+      margin: 0;
+      border: 0;
+    }
+
+    .preflight-table th,
+    .preflight-table td {
+      font-size: 12px;
+      padding: 8px 9px;
+      height: 46px;
+      background: #fff;
+    }
+
+    .preflight-table thead th {
+      background: #fff;
+      font-size: 12px;
+      letter-spacing: 0.2px;
+    }
+
+    .preflight-table td:first-child,
+    .preflight-table th:first-child {
+      width: 68%;
+      font-weight: 600;
+      text-transform: none;
+    }
+
+    .preflight-table td:last-child,
+    .preflight-table th:last-child {
+      width: 32%;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .line-field {
+      display: block;
+      width: 100%;
+      height: 24px;
+      border: 0;
+      border-bottom: 1px solid #8f9aa4;
+      background: transparent;
+      font-size: 12px;
+      padding: 2px 0;
+    }
+
+    .line-field:focus {
+      outline: none;
+      border-bottom-color: var(--accent);
+    }
+
+    .date-ymd {
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-end;
+      gap: 6px;
+      padding-top: 2px;
+    }
+
+    .date-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .blank-initials {
+      background: #fff;
+    }
+
+    .date-ymd input {
+      width: 28px;
+      padding: 2px 0;
+      border: 0;
+      border-bottom: 1px solid #8f9aa4;
+      text-align: center;
+      font-size: 12px;
+      background: transparent;
+    }
+
+    .date-ymd input:focus {
+      outline: none;
+      border-bottom-color: var(--accent);
+    }
+
+    .date-ymd span {
+      font-size: 10px;
+      color: #47515a;
+      text-transform: uppercase;
+      margin-left: -2px;
+      margin-right: 2px;
+    }
+
     .footer {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -180,11 +290,39 @@
     }
 
     @media (max-width: 900px) {
+      body {
+        padding: 10px;
+      }
+
+      .page {
+        padding: 12px;
+      }
+
+      h1 {
+        font-size: 15px;
+        line-height: 1.3;
+      }
+
       .split,
       .footer,
       .meta,
       .output-grid {
         grid-template-columns: 1fr;
+      }
+
+      .split > div:last-child {
+        order: -1;
+      }
+
+      th,
+      td {
+        font-size: 12px;
+        padding: 6px;
+      }
+
+      input {
+        font-size: 16px;
+        min-height: 38px;
       }
 
       td:first-child {
@@ -211,7 +349,8 @@
 
     <section class="split">
       <div>
-        <table>
+        <div class="table-scroll">
+        <table class="wb-table">
           <thead>
             <tr>
               <th>Cessna 172</th>
@@ -283,6 +422,7 @@
             </tr>
           </tbody>
         </table>
+        </div>
 
         <div class="card">
           <h2>Fuel Helper</h2>
@@ -299,7 +439,8 @@
 
         <div class="card">
           <h2>Persons On Board</h2>
-          <table>
+          <div class="table-scroll">
+          <table class="persons-table">
             <thead>
               <tr>
                 <th>Name</th>
@@ -313,6 +454,7 @@
               <tr><td><input type="text" placeholder="Passenger" /></td><td><input type="text" /></td></tr>
             </tbody>
           </table>
+          </div>
         </div>
       </div>
 
@@ -332,20 +474,43 @@
           <div class="status" id="statusPanel"></div>
         </div>
 
-        <div class="card">
-          <h2>Pre-Flight</h2>
-          <table class="checklist">
+        <div class="preflight-card">
+          <table class="preflight-table">
             <thead>
-              <tr><th>Item</th><th>Instructor Initials</th></tr>
+              <tr><th>Pre-FLIGHT</th><th>Instructor Initials</th></tr>
             </thead>
             <tbody>
-              <tr><td>Weight and Balance</td><td><input type="text" /></td></tr>
-              <tr><td>WX and NOTAMS</td><td><input type="text" /></td></tr>
-              <tr><td>License/Permit #</td><td><input type="text" /></td></tr>
-              <tr><td>Medical Validity Date</td><td><input type="date" /></td></tr>
-              <tr><td>Booklet Expiry Date</td><td><input type="date" /></td></tr>
-              <tr><td>A/C Documents</td><td><input type="text" /></td></tr>
-              <tr><td>Daily Flight Record</td><td><input type="text" /></td></tr>
+              <tr><td>Weight &amp; Balance</td><td><input class="line-field" type="text" /></td></tr>
+              <tr><td>WX &amp; NOTAMS</td><td><input class="line-field" type="text" /></td></tr>
+              <tr><td>License/Permit #</td><td><input class="line-field" type="text" /></td></tr>
+              <tr>
+                <td>
+                  <div class="date-cell">
+                    <span>Medical Validity Date</span>
+                    <div class="date-ymd">
+                    <input type="text" maxlength="2" aria-label="Medical validity year" /><span>Y</span>
+                    <input type="text" maxlength="2" aria-label="Medical validity month" /><span>M</span>
+                    <input type="text" maxlength="2" aria-label="Medical validity day" /><span>D</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="blank-initials"></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="date-cell">
+                    <span>Booklet Expiry Date</span>
+                    <div class="date-ymd">
+                    <input type="text" maxlength="2" aria-label="Booklet expiry year" /><span>Y</span>
+                    <input type="text" maxlength="2" aria-label="Booklet expiry month" /><span>M</span>
+                    <input type="text" maxlength="2" aria-label="Booklet expiry day" /><span>D</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="blank-initials"></td>
+              </tr>
+              <tr><td>A/C Documents</td><td><input class="line-field" type="text" /></td></tr>
+              <tr><td>Daily Flight Record</td><td><input class="line-field" type="text" /></td></tr>
             </tbody>
           </table>
         </div>
