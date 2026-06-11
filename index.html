@@ -67,8 +67,6 @@
       padding: 7px 8px;
       font-size: 14px;
       width: 100%;
-      margin: 0;
-      box-sizing: border-box;
     }
 
     table {
@@ -85,7 +83,7 @@
     }
 
     .wb-table {
-      width: 100%;
+      min-width: 700px;
     }
 
     .wb-scroll {
@@ -125,15 +123,9 @@
     }
 
     .split {
-      display: flex;
+      display: grid;
+      grid-template-columns: 2fr 1.2fr;
       gap: 12px;
-      align-items: stretch;
-    }
-
-    .split > div {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
     }
 
     .card {
@@ -159,19 +151,15 @@
 
     .output-grid div {
       border: 1px solid #d2d8dd;
-      padding: 12px 10px;
+      padding: 8px;
       background: #fcfdff;
       font-size: 12px;
-      min-height: 56px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
     }
 
     .output-grid strong {
       display: block;
-      font-size: 18px;
-      margin-top: 4px;
+      font-size: 16px;
+      margin-top: 3px;
       font-variant-numeric: tabular-nums;
     }
 
@@ -220,8 +208,8 @@
     .preflight-table th,
     .preflight-table td {
       font-size: 12px;
-      padding: 10px 11px;
-      height: 52px;
+      padding: 8px 9px;
+      height: 46px;
       background: #fff;
     }
 
@@ -329,10 +317,6 @@
         grid-template-columns: 1fr;
       }
 
-      .split {
-        flex-direction: column;
-      }
-
       th,
       td {
         font-size: 12px;
@@ -340,8 +324,7 @@
       }
 
       .output-grid {
-        grid-template-columns: 1fr;
-        gap: 6px;
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .preflight-table th,
@@ -380,16 +363,15 @@
       }
 
       .wb-table {
-        min-width: 700px;
-        border-collapse: collapse;
+        min-width: 0;
       }
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 700px) {
       .wb-table {
         border-collapse: separate;
         border-spacing: 0;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         background: transparent;
       }
 
@@ -398,74 +380,77 @@
       }
 
       .wb-table tbody,
+      .wb-table tr,
       .wb-table td {
         display: block;
+        width: 100%;
       }
 
       .wb-table tbody tr {
-        display: flex;
-        flex-wrap: wrap;
-        border: 1px solid #a8b5c0;
+        border: 1px solid #8f9aa4;
         background: #fff;
-        padding: 0;
-        margin-bottom: 6px;
+        padding: 8px;
+        margin-bottom: 8px;
       }
 
       .wb-table tbody td {
         border: 0;
         padding: 0;
         margin: 0;
-        box-sizing: border-box;
       }
 
       .wb-table tbody td:first-child {
-        flex: 0 0 100%;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 700;
         color: #22303a;
-        background: #f5f7fa;
-        border-bottom: 1px solid #d5dce5;
-        padding: 6px 8px;
+        border-bottom: 1px solid #d0d8df;
+        padding-bottom: 6px;
+        margin-bottom: 6px;
       }
 
-      .wb-table tbody td:nth-child(2) {
-        flex: 0 0 100%;
-        border-bottom: 1px solid #e8ecf1;
-        padding: 6px 8px;
-      }
-
-      .wb-table tbody td:nth-child(2) input {
-        min-height: 32px;
-        width: 100%;
-        margin: 0;
-      }
-
-      .wb-table tbody td:nth-child(3) {
-        flex: 0 0 50%;
-        padding: 6px 8px;
-        border-right: 1px solid #e8ecf1;
-      }
-
+      .wb-table tbody td:nth-child(2),
+      .wb-table tbody td:nth-child(3),
       .wb-table tbody td:nth-child(4) {
-        flex: 0 0 50%;
-        padding: 6px 8px;
+        border: 1px solid #d0d8df;
+        background: #f9fbfd;
+        padding: 6px;
+        margin-bottom: 6px;
       }
 
-      .wb-table tbody td:nth-child(3) input,
-      .wb-table tbody td:nth-child(4) input {
-        width: 100%;
-        margin: 0;
-        padding: 4px 6px;
+      .wb-table tbody td:nth-child(2)::before,
+      .wb-table tbody td:nth-child(3)::before,
+      .wb-table tbody td:nth-child(4)::before {
+        display: block;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        text-transform: uppercase;
+        color: #3a4a57;
+        margin-bottom: 4px;
+      }
+
+      .wb-table tbody td:nth-child(2)::before {
+        content: "Weight (lb)";
+      }
+
+      .wb-table tbody td:nth-child(3)::before {
+        content: "Arm (in)";
+      }
+
+      .wb-table tbody td:nth-child(4)::before {
+        content: "Moment";
       }
 
       .wb-table .num {
         text-align: left;
-        font-size: 11px;
+      }
+
+      .wb-table .readonly {
+        background: #f4f8fb;
       }
 
       .wb-table input {
-        min-height: 32px;
-        font-size: 13px;
+        min-height: 36px;
       }
     }
   </style>
@@ -576,6 +561,9 @@
           <p class="tiny">Entering gallons auto-fills the matching fuel weight cells using 6.0 lb/gal avgas.</p>
         </div>
 
+      </div>
+
+      <div>
         <div class="card">
           <h2>Live Output</h2>
           <div class="output-grid">
@@ -591,29 +579,30 @@
           <div class="status" id="statusPanel"></div>
         </div>
       </div>
+    </section>
 
-      <div>
-        <div class="card">
-          <h2>Persons On Board</h2>
-          <div class="table-scroll">
-          <table class="persons-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Emergency Contact #</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td><input type="text" placeholder="Pilot in Command" /></td><td><input type="text" /></td></tr>
-              <tr><td><input type="text" placeholder="Student / Front Passenger" /></td><td><input type="text" /></td></tr>
-              <tr><td><input type="text" placeholder="Passenger" /></td><td><input type="text" /></td></tr>
-              <tr><td><input type="text" placeholder="Passenger" /></td><td><input type="text" /></td></tr>
-            </tbody>
-          </table>
-          </div>
+    <section>
+      <div class="card">
+        <h2>Persons On Board</h2>
+        <div class="table-scroll">
+        <table class="persons-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Emergency Contact #</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><input type="text" placeholder="Pilot in Command" /></td><td><input type="text" /></td></tr>
+            <tr><td><input type="text" placeholder="Student / Front Passenger" /></td><td><input type="text" /></td></tr>
+            <tr><td><input type="text" placeholder="Passenger" /></td><td><input type="text" /></td></tr>
+            <tr><td><input type="text" placeholder="Passenger" /></td><td><input type="text" /></td></tr>
+          </tbody>
+        </table>
         </div>
+      </div>
 
-        <div class="preflight-card">
+      <div class="preflight-card">
         <table class="preflight-table">
           <thead>
             <tr><th>Pre-FLIGHT</th><th>Instructor<br />Initials</th></tr>
@@ -633,7 +622,7 @@
                   </div>
                 </div>
               </td>
-              <td><input class="line-field" type="text" /></td>
+              <td class="blank-initials"></td>
             </tr>
             <tr>
               <td>
@@ -646,14 +635,13 @@
                   </div>
                 </div>
               </td>
-              <td><input class="line-field" type="text" /></td>
+              <td class="blank-initials"></td>
             </tr>
             <tr><td>A/C Documents</td><td><input class="line-field" type="text" /></td></tr>
             <tr><td>Daily Flight Record</td><td><input class="line-field" type="text" /></td></tr>
           </tbody>
         </table>
       </div>
-    </div>
     </section>
 
     <section class="footer">
